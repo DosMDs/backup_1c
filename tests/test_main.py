@@ -1,8 +1,12 @@
 """Тестирования точки входа в приложение."""
 
-from backup_1c.main import init
+from unittest.mock import patch
+
+from backup_1c.main import initial
 
 
-def test_init() -> None:
+def test_initial() -> None:
     """Тестирование инициации."""
-    assert init() is None
+    with patch("logging.Logger.info") as mock_info:
+        initial()
+        mock_info.assert_called_once_with("Начало работы.")
