@@ -4,7 +4,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 
 
-def setup_logging():
+def setup_logging() -> None:
     """Настройка логгера."""
     # Основной логгер
     logger = logging.getLogger()
