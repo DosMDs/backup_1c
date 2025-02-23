@@ -1,6 +1,7 @@
 """Модуль базовой настройки логгера."""
 
 import logging
+import os.path
 from logging.handlers import RotatingFileHandler
 
 
@@ -20,8 +21,11 @@ def setup_logging() -> None:
     console_handler.setFormatter(formatter)
 
     # Обработчик для файла с ротацией
+    log_path = "logs/app.log"
+    if not os.path.exists(log_path):
+        os.makedirs("logs")
     file_handler = RotatingFileHandler(
-        "logs/app.log",
+        log_path,
         maxBytes=10000,  # Новый файл после 10 КБ
         backupCount=3,  # Храним 3 старых файла
     )
