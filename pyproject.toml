@@ -1,0 +1,47 @@
+[project]
+name = "backup_1c"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Oleg Skakunov",email = "dosmds@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
+pytest-cov = "^6.0.0"
+black = "^25.1.0"
+ruff = "^0.9.7"
+isort = "^6.0.0"
+mypy = "^1.15.0"
+
+[tool.black]
+line-length = 79
+target-version = ["py311"]
+
+[tool.ruff]
+line-length = 79
+target-version = "py311"
+select = ["E", "F", "W", "I", "N", "D"]  # Правила: PEP 8, flake8, isort, pydocstyle
+ignore = ["D203"]  # Исключение конфликтующих правил
+
+[tool.isort]
+profile = "black"  # Совместимость с Black
+line_length = 79
+
+[tool.mypy]
+python_version = "3.11"
+strict = true  # Строгая проверка типов
+ignore_missing_imports = true  # Игнорировать ошибки импорта сторонних библиотек без аннотаций
+
+[tool.pytest.ini_options]
+addopts = "--cov=backup_1c --cov-report=html"
+testpaths = ["tests"]

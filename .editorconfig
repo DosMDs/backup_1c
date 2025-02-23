@@ -1,0 +1,26 @@
+# Указываем, что это корневой файл .editorconfig
+root = true
+
+# Настройки для всех файлов
+[*]
+charset = utf-8               # Кодировка UTF-8
+end_of_line = lf              # Unix-окончания строк
+insert_final_newline = true   # Пустая строка в конце файла
+trim_trailing_whitespace = true  # Удаление лишних пробелов
+
+# Настройки для Python-файлов
+[*.py]
+indent_style = space          # Отступы пробелами
+indent_size = 4               # 4 пробела на отступ
+max_line_length = 79          # Максимальная длина строки 79 символов
+
+# Настройки для Markdown-файлов
+[*.md]
+indent_style = space
+indent_size = 2               # 2 пробела для читаемости
+max_line_length = off         # Без ограничения длины строки
+
+# Настройки для YAML и JSON
+[*.{yml,yaml,json}]
+indent_style = space
+indent_size = 2               # 2 пробела — стандарт для этих форматов
