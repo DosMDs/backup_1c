@@ -40,6 +40,7 @@ def setup_logging() -> None:
     logger.addHandler(console_handler)
     logger.addHandler(file_handler)
 
+
 sqlalchemy_logger = logging.getLogger("sqlalchemy.engine")
 sqlalchemy_logger.setLevel(logging.WARNING)
 
