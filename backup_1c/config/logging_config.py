@@ -1,4 +1,5 @@
 """Модуль базовой настройки логгера."""
+
 import logging
 from logging.handlers import RotatingFileHandler
 
@@ -22,7 +23,7 @@ def setup_logging():
     file_handler = RotatingFileHandler(
         "logs/app.log",
         maxBytes=10000,  # Новый файл после 10 КБ
-        backupCount=3    # Храним 3 старых файла
+        backupCount=3,  # Храним 3 старых файла
     )
     file_handler.setLevel(logging.DEBUG)  # В файл пишем всё от DEBUG
     file_handler.setFormatter(formatter)
@@ -31,6 +32,7 @@ def setup_logging():
     logger.handlers.clear()
     logger.addHandler(console_handler)
     logger.addHandler(file_handler)
+
 
 if __name__ == "__main__":
     setup_logging()
