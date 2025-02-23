@@ -8,6 +8,7 @@ setup_logging()
 
 logger = logging.getLogger(__name__)
 
+
 def initial() -> None:
     """Инициализация программы."""
     logger.info("Начало работы.")
