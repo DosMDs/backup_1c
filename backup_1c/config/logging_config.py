@@ -4,7 +4,7 @@ from logging.handlers import RotatingFileHandler
 
 
 def setup_logging():
-
+    """Настройка логгера."""
     # Основной логгер
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG)  # Устанавливаем минимальный уровень
