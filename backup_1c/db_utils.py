@@ -1,7 +1,7 @@
 """Методы для работы с данными."""
 
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional
 
 from backup_1c.config.database import FileStatus, get_db
@@ -41,7 +41,7 @@ def update_file_status(file_id: int, new_status: FileStatus) -> None:
             f"Изменение статуса файла: {file.full_path}, на {new_status}"
         )
         file.status = new_status
-        file.date_modified = datetime.now(datetime.timezone.utc)
+        file.date_modified = datetime.now(timezone.utc)
         db.commit()
 
 
