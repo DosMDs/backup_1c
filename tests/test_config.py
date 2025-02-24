@@ -16,7 +16,7 @@ def test_config_init() -> None:
     assert config.TEMP_PATH == "tmp"
     assert config.DB_PATH == "app.sqlite3"
     assert config.DATABASE_URL == "sqlite:///app.sqlite3"
-    assert config.BACKUP_PATH == "/backup"
+    assert config.BACKUP_PATH == "backup"
     assert config.ENTERPRISE_PATH == "/opt/1cv8/x86_64/"
     assert config.ENTERPRISE_VERSION is None
     assert config.DB_SERVER == "localhost"

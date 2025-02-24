@@ -29,7 +29,7 @@ class Config:
         self.TEMP_PATH = os.getenv("TEMP_PATH", "tmp")
         self.DB_PATH = os.getenv("DB_PATH", "app.sqlite3")
         self.DATABASE_URL = f"sqlite:///{self.DB_PATH}"
-        self.BACKUP_PATH = os.getenv("BACKUP_PATH", "/backup")
+        self.BACKUP_PATH = os.getenv("BACKUP_PATH", "backup")
         self.ENTERPRISE_PATH = os.getenv(
             "ENTERPRISE_PATH", "/opt/1cv8/x86_64/"
         )
