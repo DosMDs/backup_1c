@@ -16,7 +16,9 @@ class DatabaseCreds(Base):
     id: Mapped[int] = mapped_column(
         Integer, primary_key=True, index=True, autoincrement=True
     )
-    db_name: Mapped[str] = mapped_column(String, nullable=False)
+    db_name: Mapped[str] = mapped_column(
+        String, nullable=False, unique=True, index=True
+    )
     username: Mapped[str] = mapped_column(String, nullable=False)
     password: Mapped[str] = mapped_column(String, nullable=False)
 
