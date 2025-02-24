@@ -72,7 +72,7 @@ def run_ibcmd(db_name: str, user: str, password: str) -> None | str:
         )
         if not enterprise_version:
             logger.error("Не удалось определить версию 1С для ibcmd")
-            return
+            return None
 
     ibcmd_path = str(Path(config.ENTERPRISE_PATH, enterprise_version, "ibcmd"))
     cmd = [
