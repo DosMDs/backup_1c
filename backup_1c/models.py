@@ -18,4 +18,5 @@ class DatabaseCreds(Base):
     password = Column(String, nullable=False)  # Пароль
 
     def __repr__(self):
-        return f"<DatabaseCreds(db_name='{self.db_name}', username='{self.username}')>"
+        """Текстовое представление."""
+        return f"<DatabaseCreds(db_name='{self.db_name}')>"
