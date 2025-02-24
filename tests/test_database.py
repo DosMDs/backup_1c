@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 
 @patch("backup_1c.config.database.SessionLocal", autospec=True)
-def test_get_db(mock_session_local):
+def test_get_db(mock_session_local: Mock) -> None:
     """Тест генератора сессий для работы с базой."""
     mock_session = Mock(spec=Session)
     mock_session_local.return_value = mock_session

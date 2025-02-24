@@ -57,7 +57,7 @@ python_version = "3.11"
 strict = true  # Строгая проверка типов
 ignore_missing_imports = true
 files = "backup_1c/"
-exclude = ["migrations/"]
+exclude = ["migrations/", "tests/"]
 
 [tool.pytest.ini_options]
 addopts = "--cov=backup_1c --cov-report=html"
