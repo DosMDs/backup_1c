@@ -84,7 +84,6 @@ def run_ibcmd(db_name: str, user: str, password: str) -> None | str:
         f"--db-name={db_name}",
         f"--db-user={config.DB_USER}",
         f"--db-pwd={config.DB_PASS}",
-        # f"--data={temp_path}",
         f"--user={user}",
         f"--password={password}",
         str(f_path),
