@@ -13,4 +13,8 @@ jobs:
       - run: poetry run black --check .
       - run: poetry run ruff check .
       - run: poetry run mypy .
-      - run: poetry run pytest
+      - name: Run tests
+        env:
+          DB_USER: "test_user"
+          DB_PASS: "test_pass"
+        run: poetry run pytest
