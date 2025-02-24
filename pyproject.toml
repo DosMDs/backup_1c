@@ -50,6 +50,7 @@ ignore = ["D203", "D213"]  # Исключение конфликтующих п�
 profile = "black"  # Совместимость с Black
 line_length = 79
 src_paths = ["backup_1c"]
+skip = ["migrations",".venv"]
 
 [tool.mypy]
 python_version = "3.11"
