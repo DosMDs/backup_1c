@@ -59,7 +59,7 @@ def run_ibcmd(db_name: str, user: str, password: str) -> None | str:
 
     logger.debug(
         f"db_name: {db_name}, user: {user}, pass: {password}",
-        f"f_path: {str(f_path)}"
+        f"f_path: {str(f_path)}",
     )
 
     ensure_path_exists(str(f_path))
@@ -97,10 +97,11 @@ def run_ibcmd(db_name: str, user: str, password: str) -> None | str:
     )
     if result.returncode != 0:
         error_message = result.stderr.decode("utf-8").strip()
-        logger.error(
+        logger_error_message = (
             f"Ошибка при выгрузке базы {db_name}:",
-            f" код возврата {str(result.returncode)}",
+            f" код возврата {result.returncode}",
         )
+        logger.error(logger_error_message)
         logger.error(f"Сообщение об ошибке: {error_message}")
         return None
 
