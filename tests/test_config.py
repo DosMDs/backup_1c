@@ -8,7 +8,7 @@ from backup_1c.config.config import Config
 
 
 @patch.dict(os.environ, {"DB_USER": "test_user", "DB_PASS": "test_pass"})
-def test_config_init():
+def test_config_init() -> None:
     """Тест инициализации класса Config."""
     config = Config()
     assert config.LOG_PATH == "logs/app.log"
@@ -25,7 +25,7 @@ def test_config_init():
 
 
 @patch.dict(os.environ, {"DB_USER": "", "DB_PASS": ""})
-def test_config_init_without_db_user_and_db_pass():
+def test_config_init_without_db_user_and_db_pass() -> None:
     """Тест инициализации класса Config без DB_USER и DB_PASS."""
     with pytest.raises(ValueError) as excinfo:
         Config()
