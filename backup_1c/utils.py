@@ -3,6 +3,7 @@
 import logging
 import subprocess
 from datetime import datetime
+from functools import lru_cache
 from pathlib import Path
 
 from backup_1c.config.config import config
@@ -22,6 +23,7 @@ def ensure_path_exists(ensure_path: str, is_file: bool = True) -> str:
     return str(path)
 
 
+@lru_cache(maxsize=1)
 def get_latest_enterprise_version(enterprise_path: str) -> None | str:
     """Находит каталог с последней версией в указанной директории."""
     path = Path(enterprise_path)
