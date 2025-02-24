@@ -1,9 +1,11 @@
 {
   "cSpell.words": [
+    "autoflush",
     "Creds",
     "DMBS",
     "dotenv",
     "ibcmd",
-    "infobase"
+    "infobase",
+    "sessionmaker"
   ]
 }
