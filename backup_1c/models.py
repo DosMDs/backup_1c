@@ -1,8 +1,11 @@
 """ORM модели для сущностей БД."""
 
-from sqlalchemy import Column, Integer, String
+import datetime
 
-from backup_1c.config.database import Base
+from sqlalchemy import DateTime, Enum, Integer, String
+from sqlalchemy.orm import Mapped, mapped_column
+
+from backup_1c.config.database import Base, FileStatus
 
 
 class DatabaseCreds(Base):
@@ -10,13 +13,37 @@ class DatabaseCreds(Base):
 
     __tablename__ = "database_creds"  # Имя таблицы в SQLite
 
-    id = Column(
-        Integer, primary_key=True, index=True
-    )  # Уникальный идентификатор
-    db_name = Column(String, nullable=False)  # Имя базы данных
-    username = Column(String, nullable=False)  # Имя пользователя
-    password = Column(String, nullable=False)  # Пароль
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    db_name: Mapped[str] = mapped_column(String, nullable=False)
+    username: Mapped[str] = mapped_column(String, nullable=False)
+    password: Mapped[str] = mapped_column(String, nullable=False)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Текстовое представление."""
         return f"<DatabaseCreds(db_name='{self.db_name}')>"
+
+
+class File(Base):
+    """Модель для хранения информации по выгруженным файлам."""
+
+    __tablename__ = "files"
+
+    id: Mapped[int] = mapped_column(
+        Integer, primary_key=True, autoincrement=True
+    )
+    full_path: Mapped[str] = mapped_column(
+        String, nullable=False, unique=True, index=True
+    )
+    status: Mapped[FileStatus] = mapped_column(
+        Enum(FileStatus), default=FileStatus.NEW, nullable=False, index=True
+    )
+    date_added: Mapped[DateTime] = mapped_column(
+        DateTime, default=datetime.utcnow, nullable=False
+    )
+    date_modified: Mapped[DateTime] = mapped_column(
+        DateTime, onupdate=datetime.utcnow
+    )
+
+    def __repr__(self) -> str:
+        """Текстовое представление."""
+        return f"<File(path='{self.full_path}', status='{self.status.value}')>"

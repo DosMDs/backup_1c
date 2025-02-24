@@ -17,6 +17,5 @@ def initial() -> None:
     logger.info("Завершение работы.")
 
 
-
 if __name__ == "__main__":
     initial()

@@ -10,39 +10,73 @@ from backup_1c.config.config import config
 logger = logging.getLogger(__name__)
 
 
-def ensure_path_exists(file_path: str) -> str:
-    """Проверяет и создает директорию для файла с помощью pathlib."""
-    path = Path(file_path)
-    directory = path.parent
+def ensure_path_exists(ensure_path: str, is_file: bool = True) -> str:
+    """Проверяет и создает директорию с помощью pathlib."""
+    path = Path(ensure_path)
 
+    directory = path.parent if is_file else path
     if not directory.exists():
-        directory.mkdir(parents=True, mode=0o755)
+        directory.mkdir(parents=True, mode=0o755, exist_ok=True)
         logger.info(f"Создана директория: {directory}")
-    else:
-        logger.info(f"Директория уже существует: {directory}")
 
     return str(path)
 
 
-def run_ibcmd(db_name, user, password):
+def get_latest_enterprise_version(enterprise_path: str) -> None | str:
+    """Находит каталог с последней версией в указанной директории."""
+    path = Path(enterprise_path)
+    if not path.is_dir():
+        logger.error(f"Путь к версиям 1С: {enterprise_path} не существует!")
+        return None
+
+    dirs = [dir for dir in path.iterdir() if dir.is_dir()]
+
+    if not dirs:
+        logger.error(f"В {path} нет каталогов.")
+        return None
+
+    version_dirs = []
+    for dir in dirs:
+        if all(part.isdigit() for part in dir.name.split(".")):
+            version_dirs.append(dir)
+
+    if not version_dirs:
+        logger.error(f"В {path} нет каталогов с версиями.")
+        return None
+
+    latest_dir = max(
+        version_dirs, key=lambda x: [int(part) for part in x.name.split(".")]
+    )
+    logger.debug(f"Последняя версия: {latest_dir.name} (путь: {latest_dir})")
+    return latest_dir.name
+
+
+def run_ibcmd(db_name: str, user: str, password: str) -> None | str:
     """Выполняет команду ibcmd для создания резервной копии базы данных."""
     dt = datetime.now().strftime("%Y-%m-%d")
     file_name = f"{db_name}_{dt}.dt"
     f_path = Path(config.BACKUP_PATH, db_name, file_name)
 
-    logger.debug(f"db_name: {db_name}, user: {user}, pass: {password}",
-                 f"f_path: {f_path}")
+    logger.debug(
+        f"db_name: {db_name}, user: {user}, pass: {password}",
+        f"f_path: {f_path}",
+    )
 
-    backup_dir = f_path.parent
-    if not backup_dir.exists():
-        ensure_path_exists(backup_dir)
+    ensure_path_exists(str(f_path))
 
-    temp_path = Path(config.TEMP_PATH)
-    if not temp_path.exists():
-        ensure_path_exists(temp_path)
+    temp_path = ensure_path_exists(config.TEMP_PATH, False)
+    enterprise_version = config.ENTERPRISE_VERSION
+    if not enterprise_version:
+        enterprise_version = get_latest_enterprise_version(
+            config.ENTERPRISE_PATH
+        )
+        if not enterprise_version:
+            logger.error("Не удалось определить версию 1С для ibcmd")
+            return
 
+    ibcmd_path = str(Path(config.ENTERPRISE_PATH, enterprise_version, "ibcmd"))
     cmd = [
-        f"/opt/1cv8/x86_64/{config['version_1c']}/ibcmd",
+        ibcmd_path,
         "infobase",
         "dump",
         f"--db-server={config.DB_SERVER}",
@@ -66,3 +100,6 @@ def run_ibcmd(db_name, user, password):
             f" код возврата {result.returncode}",
         )
         logger.error(f"Сообщение об ошибке: {error_message}")
+        return None
+
+    return str(f_path)

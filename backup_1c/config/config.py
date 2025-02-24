@@ -16,15 +16,16 @@ class Config:
     DATABASE_URL = f"sqlite:///{DB_PATH}"
     BACKUP_PATH = os.getenv("BACKUP_PATH", "/backup")
     # Данные для ibcmd
-    DB_SERVER = os.getenv("DB_SERVER")
+    ENTERPRISE_PATH = os.getenv("ENTERPRISE_PATH", "/opt/1cv8/x86_64/")
+    ENTERPRISE_VERSION = os.getenv("ENTERPRISE_VERSION")
+    IBCMD_PATH = os.getenv("IBCMD_PATH")
+    DB_SERVER = os.getenv("DB_SERVER", "localhost")
     DBMS = os.getenv("DMBS", "PostgreSQL")
     DB_USER = os.getenv("DB_USER")
     DB_PASS = os.getenv("DB_PASS")
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Инициализация класса Config."""
-        if not self.DB_SERVER:
-            raise ValueError("DB_SERVER не установлен")
         if not self.DB_USER or not self.DB_PASS:
             raise ValueError("DB_USER или DB_PASS не установлены")
 
