@@ -17,8 +17,20 @@ def test_ensure_path_exists_creates_dir() -> None:
 
 
 @patch("backup_1c.utils.subprocess.run")
-def test_run_ibcmd_success(mock_subprocess) -> None:
+@patch("backup_1c.utils.get_latest_enterprise_version")
+@patch("backup_1c.utils.config")
+def test_run_ibcmd_success(mock_config, mock_get_version, mock_subprocess):
     """Тест проверяет `run_ibcmd`."""
     mock_subprocess.return_value.returncode = 0
+    mock_get_version.return_value = "8.3.20"
+    mock_config.BACKUP_PATH = "backup"
+    mock_config.ENTERPRISE_PATH = "/opt/1cv8/x86_64/"
+    mock_config.ENTERPRISE_VERSION = None
+    mock_config.DB_SERVER = "localhost"
+    mock_config.DBMS = "PostgreSQL"
+    mock_config.DB_USER = "db_user"
+    mock_config.DB_PASS = "db_pass"
+
     result = run_ibcmd("test_db", "user", "pass")
     assert result.endswith(".dt")
+    assert "test_db" in result
