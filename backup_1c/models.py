@@ -37,11 +37,13 @@ class File(Base):
     status: Mapped[FileStatus] = mapped_column(
         Enum(FileStatus), default=FileStatus.NEW, nullable=False, index=True
     )
-    date_added: Mapped[DateTime] = mapped_column(
-        DateTime, default=datetime.utcnow, nullable=False
+    date_added: Mapped[datetime.datetime] = mapped_column(
+        DateTime,
+        default=lambda: datetime.datetime.now(datetime.UTC),
+        nullable=False,
     )
-    date_modified: Mapped[DateTime] = mapped_column(
-        DateTime, onupdate=datetime.utcnow
+    date_modified: Mapped[datetime.datetime] = mapped_column(
+        DateTime, onupdate=lambda: datetime.datetime.now(datetime.UTC)
     )
 
     def __repr__(self) -> str:
