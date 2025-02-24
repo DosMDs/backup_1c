@@ -40,9 +40,16 @@ def setup_logging() -> None:
     logger.addHandler(console_handler)
     logger.addHandler(file_handler)
 
+    # Настройка логгера SQLAlchemy
+    sqlalchemy_logger = logging.getLogger("sqlalchemy.engine")
+    sqlalchemy_logger.setLevel(logging.ERROR)
+    sqlalchemy_logger.handlers.clear()
+    sqlalchemy_logger.addHandler(file_handler)
+    sqlalchemy_logger.propagate = False
+
 
 sqlalchemy_logger = logging.getLogger("sqlalchemy.engine")
-sqlalchemy_logger.setLevel(logging.WARNING)
+sqlalchemy_logger.setLevel(logging.ERROR)
 
 
 if __name__ == "__main__":
