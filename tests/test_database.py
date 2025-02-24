@@ -3,9 +3,8 @@
 from unittest.mock import Mock, patch
 
 import pytest
-from sqlalchemy.orm import Session
-
 from backup_1c.config.database import get_db
+from sqlalchemy.orm import Session
 
 
 @patch("backup_1c.config.database.SessionLocal", autospec=True)

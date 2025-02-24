@@ -3,7 +3,6 @@
 from unittest.mock import MagicMock
 
 import pytest
-
 from backup_1c.db_utils import add_file, update_file_status
 
 

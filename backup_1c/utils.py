@@ -64,7 +64,6 @@ def run_ibcmd(db_name: str, user: str, password: str) -> None | str:
 
     ensure_path_exists(str(f_path))
 
-    temp_path = ensure_path_exists(config.TEMP_PATH, False)
     enterprise_version = config.ENTERPRISE_VERSION
     if not enterprise_version:
         enterprise_version = get_latest_enterprise_version(

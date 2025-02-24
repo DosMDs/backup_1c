@@ -4,7 +4,6 @@ import os
 from unittest.mock import patch
 
 import pytest
-
 from backup_1c.config.config import Config
 
 
