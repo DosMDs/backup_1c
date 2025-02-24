@@ -90,6 +90,8 @@ def run_ibcmd(db_name: str, user: str, password: str) -> None | str:
         str(f_path),
     ]
 
+    logger.debug(cmd)
+
     result = subprocess.run(
         cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE
     )
