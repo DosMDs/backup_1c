@@ -45,7 +45,9 @@ class File(Base):
         nullable=False,
     )
     date_modified: Mapped[datetime.datetime] = mapped_column(
-        DateTime, onupdate=lambda: datetime.datetime.now(datetime.UTC)
+        DateTime,
+        default=lambda: datetime.datetime.now(datetime.UTC),
+        onupdate=lambda: datetime.datetime.now(datetime.UTC),
     )
 
     def __repr__(self) -> str:
