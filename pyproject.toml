@@ -29,10 +29,16 @@ mypy = "^1.15.0"
 [tool.black]
 line-length = 79
 target-version = ["py311"]
+exclude = '''
+/(
+    migrations
+)/
+'''
 
 [tool.ruff]
 line-length = 79
 target-version = "py311"
+exclude = ["migrations"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "N", "D"]  # Правила: PEP 8, flake8, isort, pydocstyle
@@ -41,11 +47,13 @@ ignore = ["D203", "D213"]  # Исключение конфликтующих п�
 [tool.isort]
 profile = "black"  # Совместимость с Black
 line_length = 79
+skip = ["migrations"]
 
 [tool.mypy]
 python_version = "3.11"
 strict = true  # Строгая проверка типов
-ignore_missing_imports = true  # Игнорировать ошибки импорта сторонних библиотек без аннотаций
+ignore_missing_imports = true
+exclude = ["migrations/"]
 
 [tool.pytest.ini_options]
 addopts = "--cov=backup_1c --cov-report=html"
