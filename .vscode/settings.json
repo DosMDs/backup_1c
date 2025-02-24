@@ -6,6 +6,7 @@
     "dotenv",
     "ibcmd",
     "infobase",
+    "onupdate",
     "sessionmaker"
   ]
 }
