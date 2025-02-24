@@ -18,7 +18,6 @@ class Config:
     # Данные для ibcmd
     ENTERPRISE_PATH = os.getenv("ENTERPRISE_PATH", "/opt/1cv8/x86_64/")
     ENTERPRISE_VERSION = os.getenv("ENTERPRISE_VERSION")
-    IBCMD_PATH = os.getenv("IBCMD_PATH")
     DB_SERVER = os.getenv("DB_SERVER", "localhost")
     DBMS = os.getenv("DMBS", "PostgreSQL")
     DB_USER = os.getenv("DB_USER")
