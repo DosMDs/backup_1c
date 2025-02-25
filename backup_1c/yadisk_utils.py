@@ -44,7 +44,7 @@ def delete_file_from_yadisk(remote_path: str) -> bool:
 def empty_trash() -> bool:
     """Очищает корзину на Яндекс.Диске."""
     try:
-        yandex_disk.remove_trash()
+        yandex_disk.remove_trash("")
         logger.info("Корзина на Яндекс.Диске очищена")
         return True
     except Exception as e:
