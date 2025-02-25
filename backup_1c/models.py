@@ -1,6 +1,7 @@
 """ORM модели для сущностей БД."""
 
 import datetime
+from typing import Optional
 
 from sqlalchemy import Boolean, DateTime, Enum, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
@@ -55,6 +56,7 @@ class File(Base):
     is_deleted: Mapped[bool] = mapped_column(
         Boolean, default=False, index=True
     )
+    download_link: Mapped[Optional[str]] = mapped_column(String, nullable=True)
 
     def __repr__(self) -> str:
         """Текстовое представление."""

@@ -11,6 +11,8 @@ from backup_1c.db_utils import (
     delete_old_backups,
     get_file_by_path,
     get_files_by_status,
+    sync_deleted_files_from_yadisk,
+    sync_new_files_to_yadisk,
     update_file_status,
 )
 from backup_1c.models import File
@@ -22,6 +24,17 @@ def mock_db():
     db = MagicMock()
     with patch("backup_1c.db_utils.get_db", return_value=iter([db])):
         yield db
+
+
+@pytest.fixture
+def mock_yadisk():
+    """Фикстура для мока Яндекс.Диска."""
+    with patch("backup_1c.db_utils.upload_file_to_yadisk") as mock_upload:
+        with patch(
+            "backup_1c.db_utils.delete_file_from_yadisk"
+        ) as mock_delete:
+            with patch("backup_1c.db_utils.empty_trash") as mock_trash:
+                yield mock_upload, mock_delete, mock_trash
 
 
 def test_add_file(mock_db):
@@ -131,3 +144,83 @@ def test_delete_old_backups(mock_db):
             assert mock_file.status == FileStatus.DELETED
             assert mock_file.is_deleted
             mock_db.commit.assert_called_once()
+
+
+def test_sync_new_files_to_yadisk_success(mock_db, mock_yadisk):
+    """Тест успешной синхронизации новых файлов."""
+    # Arrange
+    mock_file = File(
+        full_path="new_file.dt", status=FileStatus.NEW, is_deleted=False
+    )
+    mock_db.query.return_value.filter.return_value.all.return_value = [
+        mock_file
+    ]
+    mock_upload, _, _ = mock_yadisk
+    mock_upload.return_value = "http://yandex.disk/link"
+
+    # Act
+    sync_new_files_to_yadisk()
+
+    # Assert
+    assert mock_file.status == FileStatus.PROCESSED
+    assert mock_file.download_link == "http://yandex.disk/link"
+    mock_db.commit.assert_called()
+
+
+def test_sync_new_files_to_yadisk_failure(mock_db, mock_yadisk):
+    """Тест неудачной синхронизации новых файлов."""
+    # Arrange
+    mock_file = File(
+        full_path="new_file.dt", status=FileStatus.NEW, is_deleted=False
+    )
+    mock_db.query.return_value.filter.return_value.all.return_value = [
+        mock_file
+    ]
+    mock_upload, _, _ = mock_yadisk
+    mock_upload.return_value = None
+
+    # Act
+    sync_new_files_to_yadisk()
+
+    # Assert
+    assert mock_file.status == FileStatus.NEW
+    assert mock_file.download_link is None
+
+
+def test_sync_deleted_files_from_yadisk_success(mock_db, mock_yadisk):
+    """Тест успешного удаления файлов с Яндекс.Диска."""
+    # Arrange
+    mock_file = File(
+        full_path="del_file.dt", status=FileStatus.DELETING, is_deleted=True
+    )
+    mock_db.query.return_value.filter.return_value.all.return_value = [
+        mock_file
+    ]
+    _, mock_delete, _ = mock_yadisk
+    mock_delete.return_value = True
+
+    # Act
+    sync_deleted_files_from_yadisk()
+
+    # Assert
+    assert mock_file.status == FileStatus.DELETED
+    assert mock_file.download_link is None
+
+
+def test_sync_deleted_files_from_yadisk_failure(mock_db, mock_yadisk):
+    """Тест неудачного удаления файлов с Яндекс.Диска."""
+    # Arrange
+    mock_file = File(
+        full_path="del_file.dt", status=FileStatus.DELETING, is_deleted=True
+    )
+    mock_db.query.return_value.filter.return_value.all.return_value = [
+        mock_file
+    ]
+    _, mock_delete, _ = mock_yadisk
+    mock_delete.return_value = False
+
+    # Act
+    sync_deleted_files_from_yadisk()
+
+    # Assert
+    assert mock_file.status == FileStatus.DELETING
