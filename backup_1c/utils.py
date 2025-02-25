@@ -127,5 +127,4 @@ def delete_file(full_path: str) -> bool:
             return False
     else:
         logger.warning(f"Файл не найден: {full_path}")
-        return False
     return True
