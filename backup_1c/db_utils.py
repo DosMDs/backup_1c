@@ -7,6 +7,11 @@ from backup_1c.configs.config import config
 from backup_1c.configs.database import FileStatus, get_db
 from backup_1c.models import DatabaseCreds, File
 from backup_1c.utils import calculate_threshold_date, delete_file
+from backup_1c.yadisk_utils import (
+    delete_file_from_yadisk,
+    empty_trash,
+    upload_file_to_yadisk,
+)
 
 
 def get_all_database_creds() -> List[DatabaseCreds]:
@@ -71,3 +76,53 @@ def delete_old_backups() -> None:
             file.is_deleted = True
             file.date_modified = datetime.now(timezone.utc)  # Исправлено здесь
             db.commit()
+
+
+def sync_new_files_to_yadisk() -> None:
+    """Синхронизирует новые файлы с Яндекс.Диском."""
+    db = next(get_db())
+    new_files = (
+        db.query(File)
+        .filter(File.status == FileStatus.NEW, ~File.is_deleted)
+        .all()
+    )
+
+    for file in new_files:
+        file.status = FileStatus.SYNCING
+        db.commit()
+
+        download_link = upload_file_to_yadisk(file.full_path)
+        if download_link:
+            file.status = FileStatus.PROCESSED
+            file.download_link = download_link
+        else:
+            file.status = FileStatus.NEW
+        file.date_modified = datetime.now(timezone.utc)
+        db.commit()
+
+
+def sync_deleted_files_from_yadisk() -> None:
+    """Удаляет файлы со статусом DELETING с Яндекс.Диска."""
+    db = next(get_db())
+    deleting_files = (
+        db.query(File)
+        .filter(File.status == FileStatus.DELETING, File.is_deleted)
+        .all()
+    )
+
+    for file in deleting_files:
+        file.status = FileStatus.SYNCING
+        db.commit()
+
+        if delete_file_from_yadisk(file.full_path):
+            file.status = FileStatus.DELETED
+            file.download_link = None
+        else:
+            file.status = FileStatus.DELETING
+        file.date_modified = datetime.now(timezone.utc)
+        db.commit()
+
+
+def clear_yadisk_trash() -> None:
+    """Очищает корзину на Яндекс.Диске."""
+    empty_trash()
