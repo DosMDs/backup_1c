@@ -226,11 +226,11 @@ def test_sync_deleted_files_from_yadisk_failure(mock_db, mock_yadisk):
     assert mock_file.status == FileStatus.DELETING
 
 
-def test_sync_new_files_to_yadisk_with_nested_path(mock_db, mock_yadisk):
-    """Тест синхронизации файла с вложенной структурой каталогов."""
+def test_sync_new_files_to_yadisk_with_deep_nested_path(mock_db, mock_yadisk):
+    """Тест синхронизации файла с глубокой вложенной структурой каталогов."""
     # Arrange
     mock_file = File(
-        full_path="/backup/retail/retail_2025-02-24.dt",
+        full_path="/backup/retail/subfolder/deep/retail_2025-02-24.dt",
         status=FileStatus.NEW,
         is_deleted=False,
     )
@@ -246,4 +246,6 @@ def test_sync_new_files_to_yadisk_with_nested_path(mock_db, mock_yadisk):
     # Assert
     assert mock_file.status == FileStatus.PROCESSED
     assert mock_file.download_link == "http://yandex.disk/link"
-    mock_upload.assert_called_once_with("/backup/retail/retail_2025-02-24.dt")
+    mock_upload.assert_called_once_with(
+        "/backup/retail/subfolder/deep/retail_2025-02-24.dt"
+    )
