@@ -69,5 +69,5 @@ def delete_old_backups() -> None:
         if delete_file(file.full_path):
             file.status = FileStatus.DELETED
             file.is_deleted = True
-            file.date_modified = datetime.datetime.now(timezone.utc)
+            file.date_modified = datetime.now(timezone.utc)  # Исправлено здесь
             db.commit()
