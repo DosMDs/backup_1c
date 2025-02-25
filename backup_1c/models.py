@@ -2,7 +2,7 @@
 
 import datetime
 
-from sqlalchemy import DateTime, Enum, Integer, String
+from sqlalchemy import Boolean, DateTime, Enum, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from backup_1c.configs.database import Base, FileStatus
@@ -51,6 +51,9 @@ class File(Base):
         DateTime,
         default=lambda: datetime.datetime.now(datetime.UTC),
         onupdate=lambda: datetime.datetime.now(datetime.UTC),
+    )
+    is_deleted: Mapped[bool] = mapped_column(
+        Boolean, default=False, index=True
     )
 
     def __repr__(self) -> str:

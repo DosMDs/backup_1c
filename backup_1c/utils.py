@@ -1,8 +1,9 @@
 """Методы общего назначения."""
 
 import logging
+import os
 import subprocess
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from functools import lru_cache
 from pathlib import Path
 
@@ -106,3 +107,25 @@ def run_ibcmd(db_name: str, user: str, password: str) -> None | str:
         return None
 
     return str(f_path)
+
+
+def calculate_threshold_date(lifetime_days: int) -> datetime:
+    """Вычисляет дату, отстоящую на заданное количество дней от текущей."""
+    return datetime.now(timezone.utc) - timedelta(days=lifetime_days)
+
+
+def delete_file(full_path: str) -> bool:
+    """Удаляется файл по полному пути с диска."""
+    file_path = Path(full_path)
+    # Удаляем файл с диска, если он существует
+    if file_path.exists():
+        try:
+            os.remove(file_path)
+            logger.info(f"Удалён файл: {full_path}")
+        except Exception as e:
+            logger.error(f"Ошибка при удалении файла {full_path}: {e}")
+            return False
+    else:
+        logger.warning(f"Файл не найден: {full_path}")
+        return False
+    return True

@@ -26,6 +26,7 @@ class FileStatus(enum.Enum):
     NEW = "New"
     SYNCING = "Syncing"
     PROCESSED = "Processed"
+    DELETING = "Deleting"
     DELETED = "Deleted"
 
 

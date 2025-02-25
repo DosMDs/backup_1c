@@ -6,6 +6,7 @@ from typing import List
 from backup_1c.configs.database import FileStatus
 from backup_1c.db_utils import (
     add_file,
+    delete_old_backups,
     get_all_database_creds,
     get_file_by_path,
     update_file_status,
@@ -17,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 def backup_1c() -> None:
-    """Выгрузка баз 1С через ibcmd."""
+    """Работа с бэкапами 1С."""
     creds_list: List[DatabaseCreds] = get_all_database_creds()
     for creds in creds_list:
         logger.info(f"Выгрузка базы {creds.db_name}")
@@ -31,3 +32,5 @@ def backup_1c() -> None:
             logger.info(f"Выгрузка базы {creds.db_name} завершена")
         else:
             logger.error(f"База {creds.db_name} не выгружена")
+
+    delete_old_backups()
