@@ -3,8 +3,10 @@
 from datetime import datetime, timezone
 from typing import List, Optional
 
-from backup_1c.config.database import FileStatus, get_db
+from backup_1c.configs.config import config
+from backup_1c.configs.database import FileStatus, get_db
 from backup_1c.models import DatabaseCreds, File
+from backup_1c.utils import calculate_threshold_date, delete_file
 
 
 def get_all_database_creds() -> List[DatabaseCreds]:
@@ -50,3 +52,22 @@ def get_file_by_path(full_path: str) -> Optional[File]:
     db = next(get_db())
     file = db.query(File).filter(File.full_path == full_path).first()
     return file
+
+
+def delete_old_backups() -> None:
+    """Удаляет файлы бэкапов, старше BACKUP_FILE_LIFETIME дней."""
+    db = next(get_db())
+    threshold_date = calculate_threshold_date(config.BACKUP_FILE_LIFETIME)
+
+    old_files = (
+        db.query(File)
+        .filter(~File.is_deleted, File.date_added < threshold_date)
+        .all()
+    )
+
+    for file in old_files:
+        if delete_file(file.full_path):
+            file.status = FileStatus.DELETED
+            file.is_deleted = True
+            file.date_modified = datetime.now(timezone.utc)  # Исправлено здесь
+            db.commit()

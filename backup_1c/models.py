@@ -2,10 +2,10 @@
 
 import datetime
 
-from sqlalchemy import DateTime, Enum, Integer, String
+from sqlalchemy import Boolean, DateTime, Enum, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 
-from backup_1c.config.database import Base, FileStatus
+from backup_1c.configs.database import Base, FileStatus
 
 
 class DatabaseCreds(Base):
@@ -45,11 +45,15 @@ class File(Base):
         DateTime,
         default=lambda: datetime.datetime.now(datetime.UTC),
         nullable=False,
+        index=True,
     )
     date_modified: Mapped[datetime.datetime] = mapped_column(
         DateTime,
         default=lambda: datetime.datetime.now(datetime.UTC),
         onupdate=lambda: datetime.datetime.now(datetime.UTC),
+    )
+    is_deleted: Mapped[bool] = mapped_column(
+        Boolean, default=False, index=True
     )
 
     def __repr__(self) -> str:

@@ -4,7 +4,7 @@ import logging
 import os.path
 from logging.handlers import RotatingFileHandler
 
-from backup_1c.config.config import config
+from backup_1c.configs.config import config
 from backup_1c.utils import ensure_path_exists
 
 
