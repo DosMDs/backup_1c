@@ -39,7 +39,4 @@ def downgrade() -> None:
     op.drop_index(op.f("ix_files_is_deleted"), table_name="files")
     op.drop_index(op.f("ix_files_date_added"), table_name="files")
     op.drop_column("files", "is_deleted")
-    op.drop_index(
-        op.f("ix_database_creds_db_name"), table_name="database_creds"
-    )
     # ### end Alembic commands ###
