@@ -38,6 +38,7 @@ class Config:
         self.DBMS = os.getenv("DMBS", "PostgreSQL")
         self.DB_USER = os.getenv("DB_USER")
         self.DB_PASS = os.getenv("DB_PASS")
+        self.BACKUP_FILE_LIFETIME = int(os.getenv("BACKUP_FILE_LIFETIME", 90))
 
         if not self.DB_USER or not self.DB_PASS:
             raise ValueError("DB_USER или DB_PASS не установлены")
