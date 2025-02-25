@@ -13,10 +13,39 @@ logger = logging.getLogger(__name__)
 yandex_disk = yadisk.YaDisk(token=config.YANDEX_DISK_TOKEN)
 
 
+def create_remote_directories(
+    yandex_disk: yadisk.YaDisk, remote_base_path: str, local_path: Path
+) -> None:
+    """Создаёт структуру каталогов на Яндекс.Диске."""
+    relative_path = local_path.parent.relative_to(Path(config.BACKUP_PATH))
+    current_path = remote_base_path
+
+    for part in relative_path.parts:
+        current_path = f"{current_path}/{part}"
+        if not yandex_disk.exists(current_path):
+            try:
+                yandex_disk.mkdir(current_path)
+                logger.debug(
+                    f"Создана директория на Яндекс.Диске: {current_path}"
+                )
+            except Exception as e:
+                logger.error(f"Ошибка создания директории {current_path}: {e}")
+                raise
+
+
 def upload_file_to_yadisk(local_path: str) -> Optional[str]:
     """Загружает файл на Яндекс.Диск и возвращает ссылку на скачивание."""
+    local_path_obj = Path(local_path)
+    remote_base_path = "/backups"
+
     try:
-        remote_path = f"/backups/{Path(local_path).name}"
+        create_remote_directories(
+            yandex_disk, remote_base_path, local_path_obj
+        )
+
+        relative_path = local_path_obj.relative_to(Path(config.BACKUP_PATH))
+        remote_path = f"{remote_base_path}/{relative_path}"
+
         yandex_disk.upload(local_path, remote_path, overwrite=True)
         link = yandex_disk.get_download_link(remote_path)
         logger.info(
