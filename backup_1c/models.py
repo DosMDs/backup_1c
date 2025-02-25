@@ -45,6 +45,7 @@ class File(Base):
         DateTime,
         default=lambda: datetime.datetime.now(datetime.UTC),
         nullable=False,
+        index=True,
     )
     date_modified: Mapped[datetime.datetime] = mapped_column(
         DateTime,
