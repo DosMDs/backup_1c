@@ -3,7 +3,7 @@
 import logging
 from typing import List
 
-from backup_1c.config.database import FileStatus
+from backup_1c.configs.database import FileStatus
 from backup_1c.db_utils import (
     add_file,
     get_all_database_creds,

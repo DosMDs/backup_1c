@@ -3,11 +3,11 @@
 from unittest.mock import Mock, patch
 
 import pytest
-from backup_1c.config.database import get_db
+from backup_1c.configs.database import get_db
 from sqlalchemy.orm import Session
 
 
-@patch("backup_1c.config.database.SessionLocal", autospec=True)
+@patch("backup_1c.configs.database.SessionLocal", autospec=True)
 def test_get_db(mock_session_local: Mock) -> None:
     """Тест генератора сессий для работы с базой."""
     mock_session = Mock(spec=Session)

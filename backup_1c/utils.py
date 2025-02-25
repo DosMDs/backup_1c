@@ -6,7 +6,7 @@ from datetime import datetime
 from functools import lru_cache
 from pathlib import Path
 
-from backup_1c.config.config import config
+from backup_1c.configs.config import config
 
 logger = logging.getLogger(__name__)
 

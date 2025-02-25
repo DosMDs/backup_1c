@@ -7,7 +7,7 @@ from typing import Generator
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 
-from backup_1c.config.config import config
+from backup_1c.configs.config import config
 
 logger = logging.getLogger(__name__)
 

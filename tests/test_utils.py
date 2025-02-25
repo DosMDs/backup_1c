@@ -18,7 +18,7 @@ def test_ensure_path_exists_creates_dir() -> None:
 
 @patch("backup_1c.utils.subprocess.run")
 @patch("backup_1c.utils.get_latest_enterprise_version")
-@patch("backup_1c.utils.config")
+@patch("backup_1c.configs.config")
 def test_run_ibcmd_success(mock_config, mock_get_version, mock_subprocess):
     """Тест проверяет `run_ibcmd`."""
     mock_subprocess.return_value.returncode = 0

@@ -4,7 +4,7 @@ import os
 from unittest.mock import patch
 
 import pytest
-from backup_1c.config.config import Config
+from backup_1c.configs.config import Config
 
 
 @patch.dict(os.environ, {"DB_USER": "test_user", "DB_PASS": "test_pass"})

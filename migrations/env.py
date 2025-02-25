@@ -5,8 +5,8 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-from backup_1c.config.config import config as app_config
-from backup_1c.config.database import Base
+from backup_1c.configs.config import config as app_config
+from backup_1c.configs.database import Base
 from backup_1c.models import DatabaseCreds, File
 
 # this is the Alembic Config object, which provides
@@ -53,8 +53,11 @@ def run_migrations_offline() -> None:
     with context.begin_transaction():
         context.run_migrations()
 
+
 print("Таблицы в metadata:", Base.metadata.tables.keys())
 print(f"app_config.DATABASE_URL: {app_config.DATABASE_URL}")
+
+
 def run_migrations_online() -> None:
     """Run migrations in 'online' mode.
 

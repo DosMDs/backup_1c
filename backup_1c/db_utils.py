@@ -3,7 +3,7 @@
 from datetime import datetime, timezone
 from typing import List, Optional
 
-from backup_1c.config.database import FileStatus, get_db
+from backup_1c.configs.database import FileStatus, get_db
 from backup_1c.models import DatabaseCreds, File
 
 

@@ -3,7 +3,7 @@
 import logging
 
 from backup_1c.backup import backup_1c
-from backup_1c.config.logging_config import setup_logging
+from backup_1c.configs.logging_config import setup_logging
 
 setup_logging()
 

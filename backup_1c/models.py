@@ -5,7 +5,7 @@ import datetime
 from sqlalchemy import DateTime, Enum, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 
-from backup_1c.config.database import Base, FileStatus
+from backup_1c.configs.database import Base, FileStatus
 
 
 class DatabaseCreds(Base):
