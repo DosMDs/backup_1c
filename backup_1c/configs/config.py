@@ -1,35 +1,37 @@
 """Файл для работы с переменными окружения."""
 
 import os
+from dataclasses import dataclass
+from typing import Optional
 
 from dotenv import load_dotenv
 
 load_dotenv()
 
 
+@dataclass(frozen=True)
 class Config:
     """Хранение переменных окружения."""
 
-    def __init__(self) -> None:
-        """Инициализация класса Config."""
-        self.LOG_PATH = os.getenv("LOG_PATH", "logs/app.log")
-        self.TEMP_PATH = os.getenv("TEMP_PATH", "tmp")
-        self.DB_PATH = os.getenv("DB_PATH", "app.sqlite3")
-        self.DATABASE_URL = f"sqlite:///{self.DB_PATH}"
-        self.BACKUP_PATH = os.getenv("BACKUP_PATH", "backup")
-        self.ENTERPRISE_PATH = os.getenv(
-            "ENTERPRISE_PATH", "/opt/1cv8/x86_64/"
-        )
-        self.ENTERPRISE_VERSION = os.getenv("ENTERPRISE_VERSION")
-        self.DB_SERVER = os.getenv("DB_SERVER", "localhost")
-        self.DBMS = os.getenv("DMBS", "PostgreSQL")
-        self.DB_USER = os.getenv("DB_USER")
-        self.DB_PASS = os.getenv("DB_PASS")
-        self.BACKUP_FILE_LIFETIME = int(os.getenv("BACKUP_FILE_LIFETIME", 90))
-        self.YANDEX_DISK_TOKEN = os.getenv("YANDEX_DISK_TOKEN", "")
+    LOG_PATH: str = os.getenv("LOG_PATH", "logs/app.log")
+    TEMP_PATH: str = os.getenv("TEMP_PATH", "tmp")
+    DB_PATH: str = os.getenv("DB_PATH", "app.sqlite3")
+    DATABASE_URL: str = f"sqlite:///{DB_PATH}"
+    BACKUP_PATH: str = os.getenv("BACKUP_PATH", "backup")
+    ENTERPRISE_PATH: str = os.getenv("ENTERPRISE_PATH", "/opt/1cv8/x86_64/")
+    ENTERPRISE_VERSION: Optional[str] = os.getenv("ENTERPRISE_VERSION")
+    DB_SERVER: str = os.getenv("DB_SERVER", "localhost")
+    DBMS: str = os.getenv("DBMS", "PostgreSQL")
+    DB_USER: str = os.getenv("DB_USER") or ""
+    DB_PASS: str = os.getenv("DB_PASS") or ""
+    BACKUP_FILE_LIFETIME: int = int(os.getenv("BACKUP_FILE_LIFETIME", 90))
+    YANDEX_DISK_TOKEN: str = os.getenv("YANDEX_DISK_TOKEN", "")
+    TELEGRAM_BOT_TOKEN: str = os.getenv("TELEGRAM_BOT_TOKEN", "")
 
+    def __post_init__(self):
+        """Проверка переменных окружения."""
         if not self.DB_USER or not self.DB_PASS:
-            raise ValueError("DB_USER или DB_PASS не установлены")
+            raise ValueError("DB_USER и DB_PASS должны быть указаны")
 
 
 config = Config()
